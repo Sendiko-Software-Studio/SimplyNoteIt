@@ -1,4 +1,4 @@
-package com.sendiko.simplynoteit.ui.theme
+package com.sendiko.simplynoteit.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build

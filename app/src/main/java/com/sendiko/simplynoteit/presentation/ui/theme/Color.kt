@@ -1,4 +1,4 @@
-package com.sendiko.simplynoteit.ui.theme
+package com.sendiko.simplynoteit.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
