@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -82,11 +82,13 @@ fun SignInScreen(
                         },
                         label = "Email",
                         hint = "your email",
-                        leadingIcon = Icons.Default.Person,
+                        leadingIcon = Icons.Default.Email,
                         onClearValue = { onEvents(SignInScreenEvents.OnEmailCleared) },
                         isPasswordTextField = false,
                         keyboardType = KeyboardType.Email,
-                        isPasswordVisible = true
+                        isPasswordVisible = true,
+                        isError = state.isEmailFieldError.isError,
+                        errorMessage = state.isEmailFieldError.errorMessage
                     )
                     OutlinedTextField(
                         value = state.passwordText,
@@ -103,6 +105,8 @@ fun SignInScreen(
                             onEvents(SignInScreenEvents.OnPasswordVisibilityChanged(!state.isPasswordVisible))
                         },
                         keyboardType = KeyboardType.Password,
+                        isError = state.isPasswordFieldError.isError,
+                        errorMessage = state.isPasswordFieldError.errorMessage
                     )
                     FilledButton(
                         modifier = Modifier.fillMaxWidth(),

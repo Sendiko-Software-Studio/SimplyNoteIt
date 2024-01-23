@@ -1,9 +1,12 @@
 package com.sendiko.simplynoteit.presentation.ui.screen.signin
 
+import android.text.TextUtils
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import com.sendiko.simplynoteit.data.requests.SignInRequest
 import com.sendiko.simplynoteit.data.responses.SignInResponse
 import com.sendiko.simplynoteit.domain.repositories.UserRepository
+import com.sendiko.simplynoteit.presentation.ui.helper.ErrorTextField
 import com.sendiko.simplynoteit.presentation.ui.helper.FailedRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +22,36 @@ class SignInScreenViewModel @Inject constructor(private val repo: UserRepository
 
     private val _state = MutableStateFlow(SignInScreenState())
     val state = _state.asStateFlow()
+
+    private fun isValidEmail(target: CharSequence): Boolean {
+        return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+    }
+
+    private fun isDataValid(): Boolean {
+        if (!isValidEmail(state.value.emailText)) {
+            _state.update {
+                it.copy(
+                    isEmailFieldError = ErrorTextField(
+                        isError = true,
+                        errorMessage = "Email have to be valid address."
+                    )
+                )
+            }
+            return false
+        }
+        if (state.value.passwordText.isBlank()) {
+            _state.update {
+                it.copy(
+                    isPasswordFieldError = ErrorTextField(
+                        isError = true,
+                        errorMessage = "Password can't be empty."
+                    )
+                )
+            }
+            return false
+        }
+        return true
+    }
 
     private fun signIn() {
         _state.update { it.copy(isLoading = true, isRequestFailed = (FailedRequest(false, ""))) }
@@ -94,11 +127,23 @@ class SignInScreenViewModel @Inject constructor(private val repo: UserRepository
     fun onEvent(event: SignInScreenEvents) {
         when (event) {
             is SignInScreenEvents.OnEmailChanged -> _state.update {
-                it.copy(emailText = event.username)
+                it.copy(
+                    emailText = event.username,
+                    isEmailFieldError = ErrorTextField(
+                        isError = false,
+                        errorMessage = ""
+                    )
+                )
             }
 
             is SignInScreenEvents.OnPasswordChanged -> _state.update {
-                it.copy(passwordText = event.password)
+                it.copy(
+                    passwordText = event.password,
+                    isPasswordFieldError = ErrorTextField(
+                        isError = false,
+                        errorMessage = ""
+                    )
+                )
             }
 
             SignInScreenEvents.OnPasswordCleared -> _state.update {
@@ -113,10 +158,10 @@ class SignInScreenViewModel @Inject constructor(private val repo: UserRepository
                 it.copy(emailText = "")
             }
 
-            is SignInScreenEvents.OnSignIn -> signIn()
             is SignInScreenEvents.SetFailedMessage -> _state.update {
                 it.copy(isRequestFailed = FailedRequest(event.isFailed, ""))
             }
+            is SignInScreenEvents.OnSignIn -> if (isDataValid()) signIn()
         }
     }
 }
