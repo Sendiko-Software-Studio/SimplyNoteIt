@@ -1,6 +1,7 @@
 package com.sendiko.simplynoteit.presentation.ui.screen.signup
 
 import com.sendiko.simplynoteit.presentation.ui.helper.ErrorTextField
+import com.sendiko.simplynoteit.presentation.ui.helper.FailedRequest
 
 data class SignUpScreenState(
     val usernameText: String = "",
@@ -9,5 +10,8 @@ data class SignUpScreenState(
     val isPasswordFieldError: ErrorTextField = ErrorTextField(),
     val isPasswordVisible: Boolean = false,
     val emailText: String = "",
-    val isEmailTextFieldError: ErrorTextField = ErrorTextField()
+    val isEmailTextFieldError: ErrorTextField = ErrorTextField(),
+    val isLoading: Boolean = false,
+    val isSignedUpSuccess: Boolean = false,
+    val isRequestFailed: FailedRequest = FailedRequest(),
 )
