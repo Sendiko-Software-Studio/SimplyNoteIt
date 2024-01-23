@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -55,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = Destinations.SignUpScreenDestination.destination,
                             content = {
-                                val viewModel: SignUpScreenViewModel = viewModel()
+                                val viewModel: SignUpScreenViewModel = hiltViewModel()
                                 SignUpScreen(
                                     state = viewModel.state.collectAsState().value,
                                     onEvents = viewModel::onEvent,
