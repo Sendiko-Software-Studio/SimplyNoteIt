@@ -9,4 +9,5 @@ sealed class SignUpScreenEvent {
     data object OnEmailCleared: SignUpScreenEvent()
     data class OnPasswordVisibilityChanged(val isVisible: Boolean): SignUpScreenEvent()
     data class OnSignUp(val username: String, val password: String): SignUpScreenEvent()
+    data class SetFailedMessage(val isFailed: Boolean): SignUpScreenEvent()
 }
