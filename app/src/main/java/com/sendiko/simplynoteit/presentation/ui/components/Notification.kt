@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sendiko.simplynoteit.presentation.ui.theme.nunitoFont
 
 @Composable
 fun Notification(
@@ -33,7 +34,8 @@ fun Notification(
                 Text(
                     text = message,
                     modifier = Modifier.padding(top = 28.dp + 8.dp, end = 8.dp, start = 8.dp, bottom = 16.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontFamily = nunitoFont
                 )
             }
         )
