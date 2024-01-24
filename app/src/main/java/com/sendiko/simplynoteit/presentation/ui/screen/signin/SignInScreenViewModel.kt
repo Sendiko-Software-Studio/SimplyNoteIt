@@ -3,6 +3,7 @@ package com.sendiko.simplynoteit.presentation.ui.screen.signin
 import android.text.TextUtils
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sendiko.simplynoteit.data.requests.SignInRequest
 import com.sendiko.simplynoteit.data.responses.SignInResponse
 import com.sendiko.simplynoteit.domain.repositories.UserRepository
@@ -12,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,10 +72,13 @@ class SignInScreenViewModel @Inject constructor(private val repo: UserRepository
                     _state.update { it.copy(isLoading = false) }
 
                     when (response.code()) {
-                        200 ->
+                        200 -> viewModelScope.launch {
+                            response.body()?.user?.let { repo.saveUsername(it.name) }
+                            response.body()?.let { repo.setToken(it.token) }
                             _state.update {
                                 it.copy(isSuccessfullySignedIn = true)
                             }
+                        }
                         401 -> _state.update {
                             it.copy(
                                 isRequestFailed = FailedRequest(
