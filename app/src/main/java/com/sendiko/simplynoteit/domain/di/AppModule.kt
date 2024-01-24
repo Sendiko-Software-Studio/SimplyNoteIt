@@ -1,10 +1,14 @@
 package com.sendiko.simplynoteit.domain.di
 
+import android.content.Context
 import com.sendiko.simplynoteit.data.ApiService
+import com.sendiko.simplynoteit.domain.preference.AppPreferences
+import com.sendiko.simplynoteit.domain.preference.dataStore
 import com.sendiko.simplynoteit.domain.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -52,7 +56,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUseRepository(apiService: ApiService): UserRepository {
-        return UserRepository(apiService)
+    fun provideUseRepository(apiService: ApiService, preferences: AppPreferences): UserRepository {
+        return UserRepository(apiService, preferences)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDatastorePreferences(@ApplicationContext context: Context): AppPreferences{
+        return AppPreferences(requireNotNull(context.dataStore))
     }
 }
