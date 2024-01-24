@@ -24,8 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sendiko.simplynoteit.R
+import com.sendiko.simplynoteit.presentation.ui.components.ContentBoxWithNotification
 import com.sendiko.simplynoteit.presentation.ui.components.FilledButton
-import com.sendiko.simplynoteit.presentation.ui.components.Notification
 import com.sendiko.simplynoteit.presentation.ui.components.OutlinedTextField
 import com.sendiko.simplynoteit.presentation.ui.screen.navigation.Destinations
 import com.sendiko.simplynoteit.presentation.ui.theme.nunitoFont
@@ -47,111 +47,113 @@ fun SignUpScreen(
                 }
             }
         )
-        Box{
-            Column(
-                modifier = Modifier.padding(
-                    top = paddingValues.calculateTopPadding(),
-                    start = 16.dp,
-                    end = 16.dp
-                )
-            ) {
-                Box(
-                    modifier = Modifier.weight(3f),
-                    contentAlignment = Alignment.Center,
-                    content = {
-                        Image(
-                            painter = painterResource(id = R.drawable.signin),
-                            contentDescription = "sign in",
-                            modifier = Modifier.fillMaxSize()
+        ContentBoxWithNotification(
+            message = state.isRequestFailed.failedMessage,
+            isVisible = state.isRequestFailed.failedMessage.isNotBlank(),
+            isErrorNotification = true,
+            isLoading = state.isLoading,
+            content = {
+                Column(
+                    modifier = Modifier.padding(
+                        top = paddingValues.calculateTopPadding(),
+                        start = 16.dp,
+                        end = 16.dp
+                    )
+                ) {
+                    Box(
+                        modifier = Modifier.weight(3f),
+                        contentAlignment = Alignment.Center,
+                        content = {
+                            Image(
+                                painter = painterResource(id = R.drawable.signin),
+                                contentDescription = "sign in",
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    )
+                    Column(
+                        modifier = Modifier.weight(7f)
+                    ) {
+                        Text(
+                            text = "Sign Up a new account",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = nunitoFont,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                        )
+                        OutlinedTextField(
+                            value = state.usernameText,
+                            onNewValue = {
+                                onEvents(SignUpScreenEvent.OnUsernameChanged(it))
+                            },
+                            label = "Username",
+                            hint = "your username",
+                            leadingIcon = Icons.Default.Person,
+                            onClearValue = { onEvents(SignUpScreenEvent.OnUsernameCleared) },
+                            isPasswordTextField = false,
+                            isPasswordVisible = true,
+                            isError = state.isUsernameFieldError.isError,
+                            errorMessage = state.isUsernameFieldError.errorMessage
+                        )
+
+                        OutlinedTextField(
+                            value = state.emailText,
+                            onNewValue = {
+                                onEvents(SignUpScreenEvent.OnEmailChanged(it))
+                            },
+                            label = "Email",
+                            hint = "your email",
+                            leadingIcon = Icons.Default.Email,
+                            onClearValue = { onEvents(SignUpScreenEvent.OnEmailCleared) },
+                            isPasswordTextField = false,
+                            keyboardType = KeyboardType.Email,
+                            isPasswordVisible = true,
+                            isError = state.isEmailTextFieldError.isError,
+                            errorMessage = state.isEmailTextFieldError.errorMessage
+                        )
+                        OutlinedTextField(
+                            value = state.passwordText,
+                            onNewValue = {
+                                onEvents(SignUpScreenEvent.OnPasswordChanged(it))
+                            },
+                            label = "Password",
+                            hint = "your password",
+                            leadingIcon = Icons.Default.Lock,
+                            onClearValue = { onEvents(SignUpScreenEvent.OnPasswordCleared) },
+                            isPasswordTextField = true,
+                            isPasswordVisible = state.isPasswordVisible,
+                            onPasswordVisibilityToggle = {
+                                onEvents(SignUpScreenEvent.OnPasswordVisibilityChanged(!state.isPasswordVisible))
+                            },
+                            keyboardType = KeyboardType.Password,
+                            isError = state.isPasswordFieldError.isError,
+                            errorMessage = state.isPasswordFieldError.errorMessage
+                        )
+                        FilledButton(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = if (state.isLoading) "Loading..." else "Sign up",
+                            enabled = !state.isLoading,
+                            onClick = { onEvents(
+                                SignUpScreenEvent.OnSignUp(
+                                    username = state.usernameText,
+                                    password = state.passwordText
+                                )) }
+                        )
+                        TextButton(
+                            onClick = { onNavigate(Destinations.SignInScreenDestination.destination) },
+                            content = {
+                                Text(
+                                    text = "Udah punya akun? sign in sini!",
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = nunitoFont
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
-                )
-                Column(
-                    modifier = Modifier.weight(7f)
-                ) {
-                    Text(
-                        text = "Sign Up a new account",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = nunitoFont,
-                        modifier = Modifier.padding(vertical = 8.dp),
-                    )
-                    OutlinedTextField(
-                        value = state.usernameText,
-                        onNewValue = {
-                            onEvents(SignUpScreenEvent.OnUsernameChanged(it))
-                        },
-                        label = "Username",
-                        hint = "your username",
-                        leadingIcon = Icons.Default.Person,
-                        onClearValue = { onEvents(SignUpScreenEvent.OnUsernameCleared) },
-                        isPasswordTextField = false,
-                        isPasswordVisible = true,
-                        isError = state.isUsernameFieldError.isError,
-                        errorMessage = state.isUsernameFieldError.errorMessage
-                    )
-
-                    OutlinedTextField(
-                        value = state.emailText,
-                        onNewValue = {
-                            onEvents(SignUpScreenEvent.OnEmailChanged(it))
-                        },
-                        label = "Email",
-                        hint = "your email",
-                        leadingIcon = Icons.Default.Email,
-                        onClearValue = { onEvents(SignUpScreenEvent.OnEmailCleared) },
-                        isPasswordTextField = false,
-                        keyboardType = KeyboardType.Email,
-                        isPasswordVisible = true,
-                        isError = state.isEmailTextFieldError.isError,
-                        errorMessage = state.isEmailTextFieldError.errorMessage
-                    )
-                    OutlinedTextField(
-                        value = state.passwordText,
-                        onNewValue = {
-                            onEvents(SignUpScreenEvent.OnPasswordChanged(it))
-                        },
-                        label = "Password",
-                        hint = "your password",
-                        leadingIcon = Icons.Default.Lock,
-                        onClearValue = { onEvents(SignUpScreenEvent.OnPasswordCleared) },
-                        isPasswordTextField = true,
-                        isPasswordVisible = state.isPasswordVisible,
-                        onPasswordVisibilityToggle = {
-                            onEvents(SignUpScreenEvent.OnPasswordVisibilityChanged(!state.isPasswordVisible))
-                        },
-                        keyboardType = KeyboardType.Password,
-                        isError = state.isPasswordFieldError.isError,
-                        errorMessage = state.isPasswordFieldError.errorMessage
-                    )
-                    FilledButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = if (state.isLoading) "Loading..." else "Sign up",
-                        enabled = !state.isLoading,
-                        onClick = { onEvents(
-                            SignUpScreenEvent.OnSignUp(
-                                username = state.usernameText,
-                                password = state.passwordText
-                            )) }
-                    )
-                    TextButton(
-                        onClick = { onNavigate(Destinations.SignInScreenDestination.destination) },
-                        content = {
-                            Text(
-                                text = "Udah punya akun? sign in sini!",
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                fontFamily = nunitoFont
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
             }
-            Notification(
-                message = state.isRequestFailed.failedMessage,
-                isVisible = state.isRequestFailed.failedMessage.isNotBlank()
-            )
-        }
+        )
     }
 }
