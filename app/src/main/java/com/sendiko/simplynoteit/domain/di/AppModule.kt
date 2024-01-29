@@ -4,6 +4,7 @@ import android.content.Context
 import com.sendiko.simplynoteit.data.ApiService
 import com.sendiko.simplynoteit.domain.preference.AppPreferences
 import com.sendiko.simplynoteit.domain.preference.dataStore
+import com.sendiko.simplynoteit.domain.repositories.TaskRepository
 import com.sendiko.simplynoteit.domain.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -56,8 +57,14 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUseRepository(apiService: ApiService, preferences: AppPreferences): UserRepository {
+    fun provideUserRepository(apiService: ApiService, preferences: AppPreferences): UserRepository {
         return UserRepository(apiService, preferences)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTaskRepository(apiService: ApiService): TaskRepository {
+        return TaskRepository(apiService)
     }
 
     @Singleton
