@@ -98,7 +98,8 @@ class MainActivity : ComponentActivity() {
                                     content = {
                                         val viewModel: DashboardScreenViewModel = hiltViewModel()
                                         DashboardScreen(
-                                            state = viewModel.state.collectAsState().value
+                                            state = viewModel.state.collectAsState().value,
+                                            onEvent = viewModel::onEvent
                                         )
                                     }
                                 )
