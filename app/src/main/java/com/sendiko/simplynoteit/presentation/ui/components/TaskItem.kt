@@ -7,13 +7,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sendiko.simplynoteit.data.responses.TaskItem
@@ -22,12 +24,15 @@ import com.sendiko.simplynoteit.presentation.ui.theme.nunitoFont
 @Composable
 fun TaskItem(
     task: TaskItem,
-    onCheckChange: (Boolean) -> Unit,
-    onTaskClick: (TaskItem) -> Unit
+    onCheckChange: (TaskItem) -> Unit,
+    onTaskClick: (TaskItem) -> Unit,
 ) {
-    val isDone = task.isDone == 1
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .clickable { onTaskClick(task) },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -44,39 +49,30 @@ fun TaskItem(
                 fontFamily = nunitoFont
             )
             Text(
-                text = task.description.take(24) + if (task.description.length > 24) "..." else "",
-                fontFamily = nunitoFont
+                text = if (isExpanded) task.description else task.description.take(24) + if (task.description.length > 24) "..." else "",
+                fontFamily = nunitoFont,
+                modifier = Modifier
+                    .clickable {
+                        isExpanded = !isExpanded
+                    }
+                    .padding(end = 24.dp)
             )
         }
         Checkbox(
-            checked = isDone,
+            checked = task.isDone == "1",
             onCheckedChange = {
-                onCheckChange(!isDone)
+                onCheckChange(
+                    TaskItem(
+                        title = task.title,
+                        description = task.description,
+                        isDone = "1",
+                        userId = task.userId,
+                        id = task.id,
+                        createdAt = task.createdAt,
+                        updatedAt = task.updatedAt
+                    )
+                )
             },
-        )
-    }
-}
-
-@Preview
-@Composable
-fun TaskItemPrev() {
-    Surface {
-        TaskItem(
-            task = TaskItem(
-                id = 1,
-                userId = 1,
-                title = "This",
-                description = "aslkdfj",
-                createdAt = "0",
-                isDone = 0,
-                updatedAt = "0"
-            ),
-            onCheckChange = {
-
-            },
-            onTaskClick = {
-
-            }
         )
     }
 }
