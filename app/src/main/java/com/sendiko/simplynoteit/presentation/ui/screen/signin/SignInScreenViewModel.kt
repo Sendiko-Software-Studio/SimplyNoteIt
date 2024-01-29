@@ -75,6 +75,7 @@ class SignInScreenViewModel @Inject constructor(private val repo: UserRepository
                         200 -> viewModelScope.launch {
                             response.body()?.user?.let { repo.saveUsername(it.name) }
                             response.body()?.let { repo.setToken(it.token) }
+                            response.body()?.user?.let { repo.setId(it.id.toString()) }
                             _state.update {
                                 it.copy(isSuccessfullySignedIn = true)
                             }
