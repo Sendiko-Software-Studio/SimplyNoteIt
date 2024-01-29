@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -70,6 +71,10 @@ fun OutlinedTextField(
             alignment = Alignment.CenterVertically
         )
     ) {
+        val textStyle = TextStyle(
+            fontFamily = nunitoFont,
+            fontSize = 16.sp
+        )
         Text(
             text = label,
             fontWeight = FontWeight.Medium,
@@ -82,9 +87,10 @@ fun OutlinedTextField(
             onValueChange = {
                 onNewValue(it)
             },
-            shape = CircleShape,
+            textStyle = textStyle,
+            shape = RoundedCornerShape(32.dp),
             placeholder = {
-                Text(text = hint)
+                Text(text = hint, fontFamily = nunitoFont)
             },
             leadingIcon = {
                 Icon(imageVector = leadingIcon, contentDescription = null)
@@ -121,7 +127,8 @@ fun OutlinedTextField(
             },
             keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             visualTransformation = if(isPasswordVisible) VisualTransformation.None
-            else PasswordVisualTransformation()
+            else PasswordVisualTransformation(),
+
         )
     }
 }
