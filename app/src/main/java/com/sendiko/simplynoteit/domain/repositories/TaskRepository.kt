@@ -12,4 +12,6 @@ class TaskRepository @Inject constructor(private val client: ApiService) {
     fun postTask(token: String, request: AddTaskRequest) = client.postTask(token, request)
 
     fun updateTask(id: String, token: String, request: UpdateTaskRequest) = client.updateTask(id, token, request)
+
+    fun deleteTask(id: String, token: String) = client.deleteTask(id, token)
 }
