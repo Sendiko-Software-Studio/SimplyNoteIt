@@ -5,12 +5,14 @@ import com.sendiko.simplynoteit.data.requests.SignInRequest
 import com.sendiko.simplynoteit.data.requests.SignUpRequest
 import com.sendiko.simplynoteit.data.requests.UpdateTaskRequest
 import com.sendiko.simplynoteit.data.responses.AddTaskResponse
+import com.sendiko.simplynoteit.data.responses.DeleteTaskResponse
 import com.sendiko.simplynoteit.data.responses.GetTasksResponse
 import com.sendiko.simplynoteit.data.responses.SignInResponse
 import com.sendiko.simplynoteit.data.responses.SignUpResponse
 import com.sendiko.simplynoteit.data.responses.UpdateTaskResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -45,5 +47,11 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body request: UpdateTaskRequest
     ): Call<UpdateTaskResponse>
+
+    @DELETE("task/{id}")
+    fun deleteTask(
+        @Path("id") id: String,
+        @Header("Authorization") token: String,
+    ): Call<DeleteTaskResponse>
 
 }
