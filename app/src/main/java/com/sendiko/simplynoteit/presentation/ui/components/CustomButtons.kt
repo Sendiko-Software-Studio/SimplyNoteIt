@@ -13,8 +13,8 @@ import com.sendiko.simplynoteit.presentation.ui.theme.nunitoFont
 /**
  *
  * Sendiko's Custom FilledButton
-*
-* */
+ *
+ * */
 @Composable
 fun FilledButton(
     modifier: Modifier = Modifier,
@@ -34,7 +34,7 @@ fun FilledButton(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
-            }, 
+            },
             modifier = modifier,
             enabled = enabled
         )
