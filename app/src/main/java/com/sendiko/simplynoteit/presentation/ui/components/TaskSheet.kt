@@ -2,12 +2,18 @@ package com.sendiko.simplynoteit.presentation.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -20,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Create
+import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Delete
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.None
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Read
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Update
@@ -43,12 +50,14 @@ fun TaskSheet(
         Read -> "Your"
         Update -> "Edit your"
         None -> ""
+        Delete -> "Delete"
     }
-    val buttonText = when(state.action) {
+    val buttonText = when (state.action) {
         Create -> "Create"
         Read -> "Your task"
         Update -> "Update"
         None -> ""
+        Delete -> "Delete"
     }
     LaunchedEffect(
         key1 = state.isVisible,
@@ -68,12 +77,33 @@ fun TaskSheet(
                     verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Top),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Text(
-                        text = "$title task",
-                        fontFamily = nunitoFont,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "$title task",
+                            fontFamily = nunitoFont,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        IconButton(
+                            onClick = {
+                                onTaskAction(Delete)
+                            },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete"
+                                )
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError
+                            )
+                        )
+                    }
                     OutlinedTextField(
                         value = state.taskText,
                         onNewValue = {
