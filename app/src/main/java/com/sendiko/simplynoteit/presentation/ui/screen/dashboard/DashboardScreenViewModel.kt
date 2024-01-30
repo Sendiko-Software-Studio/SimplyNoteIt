@@ -50,7 +50,12 @@ class DashboardScreenViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DashboardScreenState())
 
     private fun deleteTask(id: String) {
-        _state.update { it.copy(isLoading = true, taskSheetState = TaskSheetState(isVisible = false)) }
+        _state.update {
+            it.copy(
+                isLoading = true,
+                taskSheetState = TaskSheetState(isVisible = false)
+            )
+        }
         val request = taskRepository.deleteTask(
             id = id,
             token = state.value.token
@@ -83,7 +88,16 @@ class DashboardScreenViewModel @Inject constructor(
     }
 
     private fun updateTask(task: TaskItem) {
-        _state.update { it.copy(isLoading = true, taskSheetState = TaskSheetState(isVisible = false)) }
+        _state.update {
+            it.copy(
+                isLoading = true,
+                taskSheetState = TaskSheetState(
+                    isVisible = false,
+                    taskText = it.taskSheetState.taskText,
+                    descriptionText = it.taskSheetState.descriptionText
+                )
+            )
+        }
         val request = taskRepository.updateTask(
             id = task.id.toString(),
             token = state.value.token,
@@ -115,8 +129,18 @@ class DashboardScreenViewModel @Inject constructor(
             }
         )
     }
+
     private fun postTask() {
-        _state.update { it.copy(isLoading = true, taskSheetState = TaskSheetState(isVisible = false)    ) }
+        _state.update {
+            it.copy(
+                isLoading = true,
+                taskSheetState = TaskSheetState(
+                    isVisible = false,
+                    taskText = it.taskSheetState.taskText,
+                    descriptionText = it.taskSheetState.descriptionText
+                )
+            )
+        }
         val request = taskRepository.postTask(
             state.value.token,
             request = AddTaskRequest(
@@ -264,6 +288,7 @@ class DashboardScreenViewModel @Inject constructor(
                 Log.i("TASK", "onEvent: ${events.task}")
                 updateTask(events.task)
             }
+
             DashboardScreenEvents.OnTaskDescClear -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -274,6 +299,7 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
+
             DashboardScreenEvents.OnTaskTitleClear -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -284,6 +310,7 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
+
             is DashboardScreenEvents.OnUpdateTask -> {
                 val task = TaskItem(
                     id = state.value.task!!.id,
@@ -296,8 +323,9 @@ class DashboardScreenViewModel @Inject constructor(
                 )
                 updateTask(task)
             }
+
             is DashboardScreenEvents.OnCreateTask -> postTask()
-            DashboardScreenEvents.OnTaskLoad -> getTasks()
+            is DashboardScreenEvents.OnTaskLoad -> getTasks()
 
             is DashboardScreenEvents.OnDeleteTask -> deleteTask(state.value.task!!.id.toString())
         }
