@@ -41,6 +41,11 @@ import com.sendiko.simplynoteit.presentation.ui.components.CompletedTaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.LoadingTaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.TaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.TaskSheet
+import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Create
+import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Delete
+import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.None
+import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Read
+import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Update
 import com.sendiko.simplynoteit.presentation.ui.theme.nunitoFont
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,7 +116,7 @@ fun DashboardScreen(
                             onEvent(
                                 DashboardScreenEvents.OnTaskSheetVisibilityChanged(
                                     isVisible = true,
-                                    TaskAction.Create
+                                    Create
                                 )
                             )
                         },
@@ -129,7 +134,7 @@ fun DashboardScreen(
                 onEvent(
                     DashboardScreenEvents.OnTaskSheetVisibilityChanged(
                         isVisible = false,
-                        taskAction = TaskAction.None
+                        taskAction = None
                     )
                 )
             },
@@ -146,9 +151,13 @@ fun DashboardScreen(
                 onEvent(DashboardScreenEvents.OnTaskDescClear)
             },
             onTaskAction = {
-                if (it == TaskAction.Create)
-                    onEvent(DashboardScreenEvents.OnCreateTask)
-                else onEvent(DashboardScreenEvents.OnUpdateTask)
+                when(it){
+                    Create -> onEvent(DashboardScreenEvents.OnCreateTask)
+                    Update -> onEvent(DashboardScreenEvents.OnUpdateTask)
+                    Delete -> onEvent(DashboardScreenEvents.OnDeleteTask)
+                    Read -> null
+                    None -> null
+                }
             }
         )
         LazyColumn(
@@ -219,7 +228,9 @@ fun DashboardScreen(
                                 onCheckChange = {
                                     onEvent(DashboardScreenEvents.OnCheckChange(it))
                                 },
-                                onTaskClick = {}
+                                onTaskClick = {
+                                    onEvent(DashboardScreenEvents.OnTaskClick(task))
+                                }
                             )
                         }
                     )
