@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sendiko.simplynoteit.data.requests.AddTaskRequest
 import com.sendiko.simplynoteit.data.requests.UpdateTaskRequest
 import com.sendiko.simplynoteit.data.responses.AddTaskResponse
+import com.sendiko.simplynoteit.data.responses.DeleteTaskResponse
 import com.sendiko.simplynoteit.data.responses.GetTasksResponse
 import com.sendiko.simplynoteit.data.responses.TaskItem
 import com.sendiko.simplynoteit.data.responses.UpdateTaskResponse
@@ -48,8 +49,41 @@ class DashboardScreenViewModel @Inject constructor(
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DashboardScreenState())
 
+    private fun deleteTask(id: String) {
+        _state.update { it.copy(isLoading = true, taskSheetState = TaskSheetState(isVisible = false)) }
+        val request = taskRepository.deleteTask(
+            id = id,
+            token = state.value.token
+        )
+        request.enqueue(
+            object : Callback<DeleteTaskResponse> {
+                override fun onResponse(
+                    call: Call<DeleteTaskResponse>,
+                    response: Response<DeleteTaskResponse>
+                ) {
+                    _state.update {
+                        it.copy(isLoading = false, tasks = emptyList())
+                    }
+                }
+
+                override fun onFailure(call: Call<DeleteTaskResponse>, t: Throwable) {
+                    _state.update {
+                        it.copy(
+                            isLoading = true,
+                            isRequestFailed = FailedRequest(
+                                isFailed = true,
+                                failedMessage = t.message.toString()
+                            )
+                        )
+                    }
+                }
+
+            }
+        )
+    }
+
     private fun updateTask(task: TaskItem) {
-        _state.update { it.copy(isLoading = true) }
+        _state.update { it.copy(isLoading = true, taskSheetState = TaskSheetState(isVisible = false)) }
         val request = taskRepository.updateTask(
             id = task.id.toString(),
             token = state.value.token,
@@ -82,7 +116,7 @@ class DashboardScreenViewModel @Inject constructor(
         )
     }
     private fun postTask() {
-        _state.update { it.copy(isLoading = true) }
+        _state.update { it.copy(isLoading = true, taskSheetState = TaskSheetState(isVisible = false)    ) }
         val request = taskRepository.postTask(
             state.value.token,
             request = AddTaskRequest(
@@ -226,24 +260,10 @@ class DashboardScreenViewModel @Inject constructor(
                 )
             }
 
-            is DashboardScreenEvents.OnCreateTask -> postTask()
             is DashboardScreenEvents.OnCheckChange -> {
                 Log.i("TASK", "onEvent: ${events.task}")
                 updateTask(events.task)
             }
-            is DashboardScreenEvents.OnUpdateTask -> {
-                val task = TaskItem(
-                    id = state.value.task!!.id,
-                    title = state.value.taskSheetState.taskText,
-                    description = state.value.taskSheetState.descriptionText,
-                    isDone = state.value.task!!.isDone,
-                    userId = state.value.userId,
-                    updatedAt = state.value.task!!.updatedAt,
-                    createdAt = state.value.task!!.createdAt
-                )
-                updateTask(task)
-            }
-            DashboardScreenEvents.OnTaskLoad -> getTasks()
             DashboardScreenEvents.OnTaskDescClear -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -264,6 +284,22 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
+            is DashboardScreenEvents.OnUpdateTask -> {
+                val task = TaskItem(
+                    id = state.value.task!!.id,
+                    title = state.value.taskSheetState.taskText,
+                    description = state.value.taskSheetState.descriptionText,
+                    isDone = state.value.task!!.isDone,
+                    userId = state.value.userId,
+                    updatedAt = state.value.task!!.updatedAt,
+                    createdAt = state.value.task!!.createdAt
+                )
+                updateTask(task)
+            }
+            is DashboardScreenEvents.OnCreateTask -> postTask()
+            DashboardScreenEvents.OnTaskLoad -> getTasks()
+
+            is DashboardScreenEvents.OnDeleteTask -> deleteTask(state.value.task!!.id.toString())
         }
     }
 }
