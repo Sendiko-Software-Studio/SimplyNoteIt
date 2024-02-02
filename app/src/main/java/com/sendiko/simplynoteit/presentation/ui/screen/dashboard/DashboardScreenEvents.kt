@@ -8,6 +8,8 @@ sealed class DashboardScreenEvents {
     data class OnTaskTitleChange(val title: String): DashboardScreenEvents()
     data object OnTaskTitleClear: DashboardScreenEvents()
     data class OnTaskDescriptionChange(val description: String): DashboardScreenEvents()
+    data object OnNotificationMessageClear: DashboardScreenEvents()
+    data object OnFailedRequestStateClear: DashboardScreenEvents()
     data object OnTaskDescClear: DashboardScreenEvents()
     data object OnCreateTask: DashboardScreenEvents()
     data object OnUpdateTask: DashboardScreenEvents()
