@@ -7,7 +7,9 @@ import com.sendiko.simplynoteit.data.requests.UpdateTaskRequest
 import com.sendiko.simplynoteit.data.responses.AddTaskResponse
 import com.sendiko.simplynoteit.data.responses.DeleteTaskResponse
 import com.sendiko.simplynoteit.data.responses.GetTasksResponse
+import com.sendiko.simplynoteit.data.responses.GetUserResponse
 import com.sendiko.simplynoteit.data.responses.SignInResponse
+import com.sendiko.simplynoteit.data.responses.SignOutResponse
 import com.sendiko.simplynoteit.data.responses.SignUpResponse
 import com.sendiko.simplynoteit.data.responses.UpdateTaskResponse
 import retrofit2.Call
@@ -53,5 +55,16 @@ interface ApiService {
         @Path("id") id: String,
         @Header("Authorization") token: String,
     ): Call<DeleteTaskResponse>
+
+    @POST("logout")
+    fun signOut(
+        @Header("Authorization") token: String
+    ): Call<SignOutResponse>
+
+    @GET("user/{id}")
+    fun getUser(
+        @Path("id") id: String,
+        @Header("Authorization") token: String
+    ): Call<GetUserResponse>
 
 }
