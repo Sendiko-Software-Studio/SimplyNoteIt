@@ -2,6 +2,8 @@ package com.sendiko.simplynoteit.presentation.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,7 +25,7 @@ fun FilledButton(
     buttonSize: ButtonSize = ButtonSize.Regular,
     enabled: Boolean = true
 ) {
-    if (buttonSize == ButtonSize.Big){
+    if (buttonSize == ButtonSize.Big) {
         Button(
             onClick = onClick,
             content = {
@@ -48,4 +50,26 @@ fun FilledButton(
             enabled = enabled
         )
     }
+}
+
+@Composable
+fun RedButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        content = {
+            Text(
+                text = text,
+                fontFamily = nunitoFont,
+            )
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
+            contentColor = MaterialTheme.colorScheme.onError
+        ),
+        modifier = modifier
+    )
 }
