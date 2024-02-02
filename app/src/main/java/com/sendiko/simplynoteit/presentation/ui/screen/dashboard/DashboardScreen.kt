@@ -3,8 +3,6 @@ package com.sendiko.simplynoteit.presentation.ui.screen.dashboard
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sendiko.simplynoteit.data.responses.TaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.CompletedTaskItem
+import com.sendiko.simplynoteit.presentation.ui.components.ContentBoxWithNotification
 import com.sendiko.simplynoteit.presentation.ui.components.LoadingTaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.TaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.TaskSheet
@@ -46,13 +45,16 @@ import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Dele
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.None
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Read
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Update
+import com.sendiko.simplynoteit.presentation.ui.screen.navigation.Destinations
 import com.sendiko.simplynoteit.presentation.ui.theme.nunitoFont
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     state: DashboardScreenState,
-    onEvent: (DashboardScreenEvents) -> Unit
+    onEvent: (DashboardScreenEvents) -> Unit,
+    onNavigate: (String) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val tasks = state.tasks.filter {
@@ -63,167 +65,138 @@ fun DashboardScreen(
     }
     LaunchedEffect(
         key1 = state.tasks,
+        key2 = state.notificationMessage,
         block = {
             if (state.tasks == emptyList<TaskItem>())
                 onEvent(DashboardScreenEvents.OnTaskLoad)
+
+            if (state.notificationMessage.isNotBlank())
+                delay(2000)
+            onEvent(DashboardScreenEvents.OnNotificationMessageClear)
+            onEvent(DashboardScreenEvents.OnFailedRequestStateClear)
         }
     )
-    Scaffold(
-        topBar = {
-            MediumTopAppBar(
-                scrollBehavior = scrollBehavior,
-                title = {
-                    Text(
-                        text = if (state.isLoading)
-                            "Updating.."
-                        else
-                            "Hellow, ${state.name}",
-                        fontFamily = nunitoFont,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                },
-                actions = {
-                    IconButton(
-                        onClick = { /*TODO*/ },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Account",
-                                modifier = Modifier.padding(8.dp)
-                            )
-                        }
-                    )
-                }
-            )
-        },
-        bottomBar = {
-            BottomAppBar(
-                actions = {
-                    IconButton(
-                        onClick = { /*TODO*/ },
-                        content = {
-                            Icon(
-                                imageVector = Icons.Default.Sort,
-                                contentDescription = "Sort",
-                                modifier = Modifier.padding(4.dp)
-                            )
-                        }
-                    )
-                },
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = {
-                            onEvent(
-                                DashboardScreenEvents.OnTaskSheetVisibilityChanged(
-                                    isVisible = true,
-                                    Create
+    ContentBoxWithNotification(
+        message = state.notificationMessage,
+        isLoading = state.isLoading,
+        isErrorNotification = state.isRequestFailed.isFailed
+    ) {
+        Scaffold(
+            topBar = {
+                MediumTopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = {
+                        Text(
+                            text = "Hellow, ${state.name}",
+                            fontFamily = nunitoFont,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = { onNavigate(Destinations.ProfileScreenDestination.destination) },
+                            content = {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Account",
+                                    modifier = Modifier.padding(8.dp)
                                 )
-                            )
-                        },
-                        content = {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = "Add tasks")
-                        }
-                    )
-                }
-            )
-        }
-    ) { paddingValues ->
-        TaskSheet(
-            state = state.taskSheetState,
-            onDismissRequest = {
-                onEvent(
-                    DashboardScreenEvents.OnTaskSheetVisibilityChanged(
-                        isVisible = false,
-                        taskAction = None
-                    )
-                )
-            },
-            onTaskTitleChange = {
-                onEvent(DashboardScreenEvents.OnTaskTitleChange(it))
-            },
-            onTaskTitleClear = {
-                onEvent(DashboardScreenEvents.OnTaskTitleClear)
-            },
-            onTaskDescChange = {
-                onEvent(DashboardScreenEvents.OnTaskDescriptionChange(it))
-            },
-            onTaskDescClear = {
-                onEvent(DashboardScreenEvents.OnTaskDescClear)
-            },
-            onTaskAction = {
-                when(it){
-                    Create -> onEvent(DashboardScreenEvents.OnCreateTask)
-                    Update -> onEvent(DashboardScreenEvents.OnUpdateTask)
-                    Delete -> onEvent(DashboardScreenEvents.OnDeleteTask)
-                    Read -> null
-                    None -> null
-                }
-            }
-        )
-        LazyColumn(
-            modifier = Modifier
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .fillMaxSize(),
-            contentPadding = PaddingValues(
-                top = paddingValues.calculateTopPadding(),
-                start = 16.dp,
-                end = 16.dp,
-                bottom = paddingValues.calculateBottomPadding()
-            ),
-            content = {
-                if (state.isLoading) {
-                    items(5) {
-                        LoadingTaskItem()
-                    }
-                }
-                items(tasks) { task ->
-                    AnimatedVisibility(visible = !state.isLoading) {
-                        TaskItem(
-                            task = task,
-                            onCheckChange = {
-                                onEvent(DashboardScreenEvents.OnCheckChange(it))
-                            },
-                            onTaskClick = {
-                                onEvent(DashboardScreenEvents.OnTaskClick(task))
                             }
                         )
                     }
-                }
-                item {
-                    AnimatedVisibility(
-                        visible = !state.isLoading && completedTasks != emptyList<TaskItem>(),
-                        enter = slideInHorizontally(),
-                        exit = slideOutHorizontally(),
-                        content = {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 16.dp)
-                                    .clickable {
-                                        onEvent(DashboardScreenEvents.OnSetCheckedTaskVisible(!state.isCheckedTaskVisible))
-                                    },
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    text = "See completed task",
-                                    fontFamily = nunitoFont
-                                )
+                )
+            },
+            bottomBar = {
+                BottomAppBar(
+                    actions = {
+                        IconButton(
+                            onClick = { /*TODO*/ },
+                            content = {
                                 Icon(
-                                    imageVector = if (state.isCheckedTaskVisible)
-                                        Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                                    contentDescription = "See completed task"
+                                    imageVector = Icons.Default.Sort,
+                                    contentDescription = "Sort",
+                                    modifier = Modifier.padding(4.dp)
                                 )
                             }
-                        }
+                        )
+                    },
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            onClick = {
+                                onEvent(
+                                    DashboardScreenEvents.OnTaskSheetVisibilityChanged(
+                                        isVisible = true,
+                                        Create
+                                    )
+                                )
+                            },
+                            content = {
+                                Icon(imageVector = Icons.Default.Add, contentDescription = "Add tasks")
+                            }
+                        )
+                    }
+                )
+            }
+        ) { paddingValues ->
+            TaskSheet(
+                state = state.taskSheetState,
+                onDismissRequest = {
+                    onEvent(
+                        DashboardScreenEvents.OnTaskSheetVisibilityChanged(
+                            isVisible = false,
+                            taskAction = None
+                        )
                     )
+                },
+                onTaskTitleChange = {
+                    onEvent(DashboardScreenEvents.OnTaskTitleChange(it))
+                },
+                onTaskTitleClear = {
+                    onEvent(DashboardScreenEvents.OnTaskTitleClear)
+                },
+                onTaskDescChange = {
+                    onEvent(DashboardScreenEvents.OnTaskDescriptionChange(it))
+                },
+                onTaskDescClear = {
+                    onEvent(DashboardScreenEvents.OnTaskDescClear)
+                },
+                onTaskAction = {
+                    when(it){
+                        Create -> onEvent(DashboardScreenEvents.OnCreateTask)
+                        Update -> onEvent(DashboardScreenEvents.OnUpdateTask)
+                        Delete -> onEvent(DashboardScreenEvents.OnDeleteTask)
+                        Read -> null
+                        None -> null
+                    }
                 }
-                items(completedTasks) { task ->
-                    AnimatedVisibility(
-                        visible = state.isCheckedTaskVisible ,
-                        enter = expandVertically(),
-                        exit = shrinkVertically(),
-                        content = {
-                            CompletedTaskItem(
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = paddingValues.calculateTopPadding(),
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = paddingValues.calculateBottomPadding()
+                ),
+                content = {
+                    items(5) {
+                        AnimatedVisibility(
+                            visible = state.isLoading,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            LoadingTaskItem()
+                        }
+                    }
+                    items(tasks) { task ->
+                        AnimatedVisibility(
+                            visible = !state.isLoading,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                        ) {
+                            TaskItem(
                                 task = task,
                                 onCheckChange = {
                                     onEvent(DashboardScreenEvents.OnCheckChange(it))
@@ -233,9 +206,56 @@ fun DashboardScreen(
                                 }
                             )
                         }
-                    )
+                    }
+                    item {
+                        AnimatedVisibility(
+                            visible = !state.isLoading && completedTasks != emptyList<TaskItem>(),
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                            content = {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 16.dp)
+                                        .clickable {
+                                            onEvent(DashboardScreenEvents.OnSetCheckedTaskVisible(!state.isCheckedTaskVisible))
+                                        },
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = "See completed task",
+                                        fontFamily = nunitoFont
+                                    )
+                                    Icon(
+                                        imageVector = if (state.isCheckedTaskVisible)
+                                            Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                                        contentDescription = "See completed task"
+                                    )
+                                }
+                            }
+                        )
+                    }
+                    items(completedTasks) { task ->
+                        AnimatedVisibility(
+                            visible = state.isCheckedTaskVisible && !state.isLoading,
+                            enter = expandVertically(),
+                            exit = shrinkVertically(),
+                            content = {
+                                CompletedTaskItem(
+                                    task = task,
+                                    onCheckChange = {
+                                        onEvent(DashboardScreenEvents.OnCheckChange(it))
+                                    },
+                                    onTaskClick = {
+                                        onEvent(DashboardScreenEvents.OnTaskClick(task))
+                                    }
+                                )
+                            }
+                        )
+                    }
                 }
-            }
-        )
+            )
+
+        }
     }
 }
