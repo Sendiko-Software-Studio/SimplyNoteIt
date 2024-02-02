@@ -1,6 +1,5 @@
 package com.sendiko.simplynoteit.presentation.ui.screen.dashboard
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sendiko.simplynoteit.data.requests.AddTaskRequest
@@ -67,7 +66,11 @@ class DashboardScreenViewModel @Inject constructor(
                     response: Response<DeleteTaskResponse>
                 ) {
                     _state.update {
-                        it.copy(isLoading = false, tasks = emptyList())
+                        it.copy(
+                            isLoading = false,
+                            tasks = emptyList(),
+                            notificationMessage = "Task deleted! congrats!"
+                        )
                     }
                 }
 
@@ -78,7 +81,8 @@ class DashboardScreenViewModel @Inject constructor(
                             isRequestFailed = FailedRequest(
                                 isFailed = true,
                                 failedMessage = t.message.toString()
-                            )
+                            ),
+                            notificationMessage = t.message.toString()
                         )
                     }
                 }
@@ -113,17 +117,53 @@ class DashboardScreenViewModel @Inject constructor(
                     call: Call<UpdateTaskResponse>,
                     response: Response<UpdateTaskResponse>
                 ) {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            taskSheetState = TaskSheetState(isVisible = false),
-                            tasks = emptyList()
-                        )
+                    when(response.code()){
+                        200 -> _state.update {
+                            it.copy(
+                                isLoading = false,
+                                taskSheetState = TaskSheetState(isVisible = false),
+                                tasks = emptyList(),
+                                notificationMessage = when (response.body()?.task?.isDone) {
+                                    "1" -> "Task completed!"
+                                    "0" -> "Oh? missing something?"
+                                    else -> ""
+                                }
+                            )
+                        }
+                        422 -> _state.update {
+                            it.copy(
+                                isLoading = false,
+                                isRequestFailed = FailedRequest(
+                                    isFailed = true,
+                                    failedMessage = "Title and Description cannot be empty."
+                                ),
+                                notificationMessage = "Title and Description cannot be empty."
+                            )
+                        }
+                        500 -> _state.update {
+                            it.copy(
+                                isLoading = false,
+                                isRequestFailed = FailedRequest(
+                                    isFailed = true,
+                                    failedMessage = "Server error."
+                                ),
+                                notificationMessage = "Server error."
+                            )
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<UpdateTaskResponse>, t: Throwable) {
-                    _state.update { it.copy(isLoading = false) }
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            isRequestFailed = FailedRequest(
+                                isFailed = true,
+                                failedMessage = t.message.toString()
+                            ),
+                            notificationMessage = "Server error."
+                        )
+                    }
                 }
 
             }
@@ -162,16 +202,26 @@ class DashboardScreenViewModel @Inject constructor(
                             it.copy(
                                 notificationMessage = "Task successfully added!",
                                 taskSheetState = TaskSheetState(isVisible = false),
-                                tasks = emptyList()
+                                tasks = emptyList(),
                             )
                         }
-
+                        422 -> _state.update {
+                            it.copy(
+                                isLoading = false,
+                                isRequestFailed = FailedRequest(
+                                    isFailed = true,
+                                    failedMessage = "Title and Description cannot be empty."
+                                ),
+                                notificationMessage = "Title and Description cannot be empty."
+                            )
+                        }
                         else -> _state.update {
                             it.copy(
                                 isRequestFailed = FailedRequest(
                                     isFailed = true,
                                     failedMessage = "Server error."
-                                )
+                                ),
+                                notificationMessage = "Server error."
                             )
                         }
                     }
@@ -184,7 +234,8 @@ class DashboardScreenViewModel @Inject constructor(
                                 isFailed = true,
                                 failedMessage = t.message.toString()
                             ),
-                            isLoading = false
+                            isLoading = false,
+                            notificationMessage = "Server error."
                         )
                     }
                 }
@@ -240,7 +291,6 @@ class DashboardScreenViewModel @Inject constructor(
             is DashboardScreenEvents.OnSetCheckedTaskVisible -> _state.update {
                 it.copy(isCheckedTaskVisible = events.isVisible)
             }
-
             is DashboardScreenEvents.OnTaskClick -> _state.update {
                 it.copy(
                     task = events.task,
@@ -252,7 +302,6 @@ class DashboardScreenViewModel @Inject constructor(
                     ),
                 )
             }
-
             is DashboardScreenEvents.OnTaskDescriptionChange -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -263,7 +312,6 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
-
             is DashboardScreenEvents.OnTaskTitleChange -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -274,7 +322,6 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
-
             is DashboardScreenEvents.OnTaskSheetVisibilityChanged -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -283,12 +330,6 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
-
-            is DashboardScreenEvents.OnCheckChange -> {
-                Log.i("TASK", "onEvent: ${events.task}")
-                updateTask(events.task)
-            }
-
             DashboardScreenEvents.OnTaskDescClear -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -299,7 +340,6 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
-
             DashboardScreenEvents.OnTaskTitleClear -> _state.update {
                 it.copy(
                     taskSheetState = TaskSheetState(
@@ -310,7 +350,14 @@ class DashboardScreenViewModel @Inject constructor(
                     )
                 )
             }
-
+            DashboardScreenEvents.OnNotificationMessageClear -> _state.update {
+                it.copy(
+                    notificationMessage = ""
+                )
+            }
+            DashboardScreenEvents.OnFailedRequestStateClear -> _state.update {
+                it.copy(isRequestFailed = FailedRequest(isFailed = false, failedMessage = ""))
+            }
             is DashboardScreenEvents.OnUpdateTask -> {
                 val task = TaskItem(
                     id = state.value.task!!.id,
@@ -323,10 +370,9 @@ class DashboardScreenViewModel @Inject constructor(
                 )
                 updateTask(task)
             }
-
             is DashboardScreenEvents.OnCreateTask -> postTask()
             is DashboardScreenEvents.OnTaskLoad -> getTasks()
-
+            is DashboardScreenEvents.OnCheckChange -> updateTask(events.task)
             is DashboardScreenEvents.OnDeleteTask -> deleteTask(state.value.task!!.id.toString())
         }
     }
