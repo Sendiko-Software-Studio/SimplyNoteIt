@@ -23,4 +23,8 @@ class UserRepository @Inject constructor(private val client: ApiService, private
     suspend fun setId(id: String) = preferences.setId(id)
 
     fun getId() = preferences.getId()
+
+    fun signOut(token: String) = client.signOut(token)
+
+    fun getUser(userId: String, token: String) = client.getUser(userId, token)
 }
