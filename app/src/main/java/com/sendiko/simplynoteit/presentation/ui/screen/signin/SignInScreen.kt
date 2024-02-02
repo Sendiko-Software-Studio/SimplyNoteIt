@@ -52,7 +52,6 @@ fun SignInScreen(
         )
         ContentBoxWithNotification(
             message = state.isRequestFailed.failedMessage,
-            isVisible = state.isRequestFailed.failedMessage.isNotBlank(),
             isErrorNotification = true,
             isLoading = state.isLoading,
             content = {
