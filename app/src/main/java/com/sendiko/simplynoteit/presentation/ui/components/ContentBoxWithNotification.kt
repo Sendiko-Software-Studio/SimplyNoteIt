@@ -23,7 +23,6 @@ import com.sendiko.simplynoteit.presentation.ui.theme.nunitoFont
 @Composable
 fun ContentBoxWithNotification(
     message: String,
-    isVisible: Boolean,
     isErrorNotification: Boolean = false,
     isLoading: Boolean = false,
     content: @Composable (() -> Unit),
@@ -32,7 +31,7 @@ fun ContentBoxWithNotification(
         content()
         Notification(
             message = message,
-            isVisible = isVisible && !isLoading,
+            isVisible = message.isNotBlank() && !isLoading,
             isErrorNotification = isErrorNotification
         )
         LoadingIndicator(isLoading = isLoading)
