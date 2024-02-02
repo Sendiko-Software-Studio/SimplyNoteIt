@@ -15,6 +15,8 @@ import com.sendiko.simplynoteit.presentation.ui.screen.WelcomeScreen
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.DashboardScreen
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.DashboardScreenViewModel
 import com.sendiko.simplynoteit.presentation.ui.screen.navigation.Destinations
+import com.sendiko.simplynoteit.presentation.ui.screen.profile.ProfileScreen
+import com.sendiko.simplynoteit.presentation.ui.screen.profile.ProfileScreenViewModel
 import com.sendiko.simplynoteit.presentation.ui.screen.signin.SignInScreen
 import com.sendiko.simplynoteit.presentation.ui.screen.signin.SignInScreenViewModel
 import com.sendiko.simplynoteit.presentation.ui.screen.signup.SignUpScreen
@@ -99,7 +101,23 @@ class MainActivity : ComponentActivity() {
                                         val viewModel: DashboardScreenViewModel = hiltViewModel()
                                         DashboardScreen(
                                             state = viewModel.state.collectAsState().value,
-                                            onEvent = viewModel::onEvent
+                                            onEvent = viewModel::onEvent,
+                                            onNavigate = {
+                                                navController.navigate(it)
+                                            }
+                                        )
+                                    }
+                                )
+                                composable(
+                                    route = Destinations.ProfileScreenDestination.destination,
+                                    content = {
+                                        val viewModel: ProfileScreenViewModel = hiltViewModel()
+                                        ProfileScreen(
+                                            state = viewModel.state.collectAsState().value,
+                                            onEvent = viewModel::onEvent,
+                                            onNavigate = {
+                                                navController.navigate(it)
+                                            }
                                         )
                                     }
                                 )
