@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -97,86 +98,78 @@ fun ProfileScreen(
                 )
             }
         ) {
-            ContentBoxWithNotification(
-                message = state.notificationMessage,
-                isLoading = state.isLoading,
-                isErrorNotification = state.isRequestFailed.isFailed
-            ) {
-                LazyColumn(
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = it.calculateTopPadding(),
-                        bottom = it.calculateBottomPadding()
-                    ),
-                    modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-                    content = {
-                        item {
+            LazyColumn(
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = it.calculateTopPadding(),
+                    bottom = it.calculateBottomPadding()
+                ),
+                modifier = Modifier
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+                content = {
+                    item {
+                        Card(
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
                             InfoCard(label = "Username: ", text = state.name)
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Divider()
                             InfoCard(label = "Email: ", text = state.email)
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Divider()
+                            RedButton(
+                                text = "Logout",
+                                onClick = {
+                                    onEvent(ProfileScreenEvent.OnLogoutClick)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                enabled = !state.isLoading
+                            )
                         }
-                        item {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                RedButton(
-                                    text = "Logout",
-                                    onClick = {
-                                        onEvent(ProfileScreenEvent.OnLogoutClick)
-                                    },
-                                    modifier = Modifier.weight(1f)
-                                )
-                                FilledButton(
-                                    text = "Change password",
-                                    onClick = { /*TODO*/ },
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                        item {
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Card {
                             InfoCardWithIcon(
                                 label = "About us",
                                 icon = Icons.Default.Info,
                                 extraInfo = ABOUT_US
                             )
+                            Divider()
                             InfoCardWithIcon(
                                 label = "Privacy and policy",
                                 icon = Icons.Default.PrivacyTip,
                                 extraInfo = PRIVACY_POLICY
                             )
+                            Divider()
                             InfoCardWithIcon(
                                 label = "Contact us",
                                 icon = Icons.Default.ContactPage,
                                 extraInfo = CONTACT_ME
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
                         }
-                        item {
-                            Text(
-                                text = "powered by:",
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                fontFamily = nunitoFont
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    item {
+                        Text(
+                            text = "powered by:",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            fontFamily = nunitoFont
+                        )
+                        Row {
+                            Spacer(modifier = Modifier.weight(1f))
+                            Image(
+                                painter = painterResource(id = R.drawable.logo_long),
+                                contentDescription = "logo",
+                                modifier = Modifier.weight(3f)
                             )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Row {
-                                Spacer(modifier = Modifier.weight(1f))
-                                Image(
-                                    painter = painterResource(id = R.drawable.logo_long),
-                                    contentDescription = "logo",
-                                    modifier = Modifier.weight(3f)
-                                )
-                                Spacer(modifier = Modifier.weight(1f))
-                            }
+                            Spacer(modifier = Modifier.weight(1f))
                         }
                     }
-                )
-            }
+                }
+            )
         }
     }
 }
