@@ -13,6 +13,19 @@ class AppPreferences @Inject constructor(private val dataStore: DataStore<Prefer
     private val nameKey = stringPreferencesKey("username")
     private val tokenKey = stringPreferencesKey("auth_token")
     private val userIdKey = stringPreferencesKey("id")
+    private val sortByKey = stringPreferencesKey("sort_by")
+
+    fun getSortBy(): Flow<String> {
+        return dataStore.data.map {
+            it[sortByKey]?:"ID"
+        }
+    }
+
+    suspend fun setSortBy(sortBy: String) {
+        dataStore.edit {
+            it[sortByKey] = sortBy
+        }
+    }
 
     fun getId(): Flow<String> {
         return dataStore.data.map {
