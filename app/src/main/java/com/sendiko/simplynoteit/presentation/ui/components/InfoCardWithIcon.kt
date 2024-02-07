@@ -3,6 +3,7 @@ package com.sendiko.simplynoteit.presentation.ui.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,35 +35,29 @@ fun InfoCardWithIcon(
     var expanded by remember {
         mutableStateOf(false)
     }
-    Card(
-        onClick = {
-            expanded = !expanded
-        },
-        modifier = Modifier.padding(vertical = if (expanded) 4.dp else 0.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { expanded = !expanded },
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = label,
-                fontFamily = nunitoFont,
-                fontSize = 16.sp
-            )
-            Icon(
-                imageVector = icon,
-                contentDescription = "info"
-            )
-        }
-        AnimatedVisibility(
-            visible = expanded && extraInfo.isNotBlank(),
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            Text(text = extraInfo, modifier = Modifier. padding(8.dp), fontFamily = nunitoFont)
-        }
+        Text(
+            text = label,
+            fontFamily = nunitoFont,
+            fontSize = 16.sp
+        )
+        Icon(
+            imageVector = icon,
+            contentDescription = "info"
+        )
+    }
+    AnimatedVisibility(
+        visible = expanded && extraInfo.isNotBlank(),
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        Text(text = extraInfo, modifier = Modifier. padding(8.dp), fontFamily = nunitoFont)
     }
 }
 

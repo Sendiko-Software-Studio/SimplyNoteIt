@@ -18,24 +18,22 @@ fun InfoCard(
     label: String,
     text: String,
 ) {
-    Card {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = label,
-                fontFamily = nunitoFont,
-                fontSize = 16.sp
-            )
-            Text(
-                text = text,
-                fontFamily = nunitoFont,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            fontFamily = nunitoFont,
+            fontSize = 16.sp
+        )
+        Text(
+            text = text,
+            fontFamily = nunitoFont,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
