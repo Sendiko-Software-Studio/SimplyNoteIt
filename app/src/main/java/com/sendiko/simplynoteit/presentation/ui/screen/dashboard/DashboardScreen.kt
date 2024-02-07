@@ -2,7 +2,10 @@ package com.sendiko.simplynoteit.presentation.ui.screen.dashboard
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,7 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Sort
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -27,14 +30,18 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.sendiko.simplynoteit.R
 import com.sendiko.simplynoteit.data.responses.TaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.CompletedTaskItem
 import com.sendiko.simplynoteit.presentation.ui.components.ContentBoxWithNotification
@@ -110,13 +117,25 @@ fun DashboardScreen(
             bottomBar = {
                 BottomAppBar(
                     actions = {
-                        IconButton(
-                            onClick = { /*TODO*/ },
+                        TextButton(
+                            onClick = {
+                                onEvent(
+                                    DashboardScreenEvents.OnSetSortBy(
+                                        sortBy = if (state.sortBy == SortBy.ID) SortBy.DateCreated else SortBy.ID
+                                    )
+                                )
+                            },
                             content = {
-                                Icon(
-                                    imageVector = Icons.Default.Sort,
-                                    contentDescription = "Sort",
-                                    modifier = Modifier.padding(4.dp)
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    content = {
+                                        Icon(
+                                            imageVector = Icons.Default.SwapVert,
+                                            contentDescription = "reverse list"
+                                        )
+                                        Text(text = if (state.sortBy == SortBy.ID) "First created" else "Newly created")
+                                    }
                                 )
                             }
                         )
@@ -132,7 +151,10 @@ fun DashboardScreen(
                                 )
                             },
                             content = {
-                                Icon(imageVector = Icons.Default.Add, contentDescription = "Add tasks")
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Add tasks"
+                                )
                             },
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         )
@@ -163,7 +185,7 @@ fun DashboardScreen(
                     onEvent(DashboardScreenEvents.OnTaskDescClear)
                 },
                 onTaskAction = {
-                    when(it){
+                    when (it) {
                         Create -> onEvent(DashboardScreenEvents.OnCreateTask)
                         Update -> onEvent(DashboardScreenEvents.OnUpdateTask)
                         Delete -> onEvent(DashboardScreenEvents.OnDeleteTask)
@@ -183,6 +205,19 @@ fun DashboardScreen(
                     bottom = paddingValues.calculateBottomPadding()
                 ),
                 content = {
+                    item {
+                        AnimatedVisibility(
+                            visible = state.tasks == emptyList<TaskItem>() && !state.isLoading,
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.add_tasks),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
                     items(5) {
                         AnimatedVisibility(
                             visible = state.isLoading,

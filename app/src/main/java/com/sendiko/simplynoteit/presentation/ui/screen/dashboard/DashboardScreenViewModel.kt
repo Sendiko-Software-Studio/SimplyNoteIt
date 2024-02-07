@@ -12,6 +12,7 @@ import com.sendiko.simplynoteit.data.responses.UpdateTaskResponse
 import com.sendiko.simplynoteit.domain.repositories.TaskRepository
 import com.sendiko.simplynoteit.domain.repositories.UserRepository
 import com.sendiko.simplynoteit.presentation.ui.helper.FailedRequest
+import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.SortBy.*
 import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.TaskAction.Update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,17 +36,20 @@ class DashboardScreenViewModel @Inject constructor(
     private val _username = userRepository.getUsername()
     private val _token = userRepository.getToken()
     private val _userId = userRepository.getId()
+    private val _sortBy = taskRepository.getSortBy()
     val state =
         combine(
             flow = _username,
             flow2 = _token,
             flow3 = _userId,
-            flow4 = _state
-        ) { username, token, userId, state ->
+            flow4 = _sortBy,
+            flow5 = _state
+        ) { username, token, userId, sortBy, state ->
             state.copy(
                 name = username,
                 token = "Bearer $token",
-                userId = userId
+                userId = userId,
+                sortBy = enumValueOf(sortBy)
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DashboardScreenState())
 
@@ -256,7 +261,14 @@ class DashboardScreenViewModel @Inject constructor(
                     when (response.code()) {
                         200 -> _state.update {
                             response.body()?.task.let { tasks ->
-                                it.copy(tasks = tasks ?: emptyList())
+                                it.copy(
+                                    tasks = when(state.value.sortBy){
+                                        AlphabetDesc -> tasks!!.sortedByDescending { it.title }
+                                        AlphabetAsc -> tasks!!.sortedBy { it.title }
+                                        ID -> tasks?: emptyList()
+                                        DateCreated -> tasks!!.sortedByDescending { it.createdAt }
+                                    }
+                                )
                             }
                         }
 
@@ -374,6 +386,17 @@ class DashboardScreenViewModel @Inject constructor(
             is DashboardScreenEvents.OnTaskLoad -> getTasks()
             is DashboardScreenEvents.OnCheckChange -> updateTask(events.task)
             is DashboardScreenEvents.OnDeleteTask -> deleteTask(state.value.task!!.id.toString())
+            is DashboardScreenEvents.OnSetSortBy -> {
+                viewModelScope.launch {
+                    taskRepository.setSortBy(events.sortBy)
+                }
+                _state.update {
+                    it.copy(
+                        sortBy = events.sortBy,
+                        tasks = emptyList()
+                    )
+                }
+            }
         }
     }
 }

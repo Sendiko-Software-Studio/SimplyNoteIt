@@ -10,6 +10,7 @@ sealed class DashboardScreenEvents {
     data class OnTaskDescriptionChange(val description: String): DashboardScreenEvents()
     data object OnNotificationMessageClear: DashboardScreenEvents()
     data object OnFailedRequestStateClear: DashboardScreenEvents()
+    data class OnSetSortBy(val sortBy: SortBy): DashboardScreenEvents()
     data object OnTaskDescClear: DashboardScreenEvents()
     data object OnCreateTask: DashboardScreenEvents()
     data object OnUpdateTask: DashboardScreenEvents()
