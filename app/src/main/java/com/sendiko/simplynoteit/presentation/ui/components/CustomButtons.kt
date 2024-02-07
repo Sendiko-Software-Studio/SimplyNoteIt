@@ -56,7 +56,8 @@ fun FilledButton(
 fun RedButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Button(
         onClick = onClick,
@@ -70,6 +71,7 @@ fun RedButton(
             containerColor = MaterialTheme.colorScheme.error,
             contentColor = MaterialTheme.colorScheme.onError
         ),
-        modifier = modifier
+        modifier = modifier,
+        enabled = enabled
     )
 }
