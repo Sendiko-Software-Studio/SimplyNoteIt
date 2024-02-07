@@ -63,8 +63,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTaskRepository(apiService: ApiService): TaskRepository {
-        return TaskRepository(apiService)
+    fun provideTaskRepository(apiService: ApiService, appPreferences: AppPreferences): TaskRepository {
+        return TaskRepository(apiService, appPreferences)
     }
 
     @Singleton
