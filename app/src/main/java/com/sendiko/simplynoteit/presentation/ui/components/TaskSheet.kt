@@ -88,21 +88,23 @@ fun TaskSheet(
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        IconButton(
-                            onClick = {
-                                onTaskAction(Delete)
-                            },
-                            content = {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete"
+                        if (state.action != Create){
+                            IconButton(
+                                onClick = {
+                                    onTaskAction(Delete)
+                                },
+                                content = {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Delete"
+                                    )
+                                },
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.error,
+                                    contentColor = MaterialTheme.colorScheme.onError
                                 )
-                            },
-                            colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = MaterialTheme.colorScheme.onError
                             )
-                        )
+                        }
                     }
                     OutlinedTextField(
                         value = state.taskText,
