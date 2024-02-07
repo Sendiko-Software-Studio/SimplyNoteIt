@@ -14,4 +14,5 @@ data class SignUpScreenState(
     val isLoading: Boolean = false,
     val isSignedUpSuccess: Boolean = false,
     val isRequestFailed: FailedRequest = FailedRequest(),
+    val notificationMessage: String = "",
 )

@@ -84,7 +84,7 @@ class SignUpScreenViewModel @Inject constructor(private val repo: UserRepository
                 ) {
                     _state.update { it.copy(isLoading = false) }
                     when (response.code()) {
-                        200 -> _state.update {
+                        201 -> _state.update {
                             it.copy(isSignedUpSuccess = true)
                         }
 
@@ -93,7 +93,8 @@ class SignUpScreenViewModel @Inject constructor(private val repo: UserRepository
                                 isRequestFailed = FailedRequest(
                                     isFailed = true,
                                     failedMessage = "Email already taken."
-                                )
+                                ),
+                                notificationMessage = "Email already taken."
                             )
                         }
 
@@ -102,7 +103,8 @@ class SignUpScreenViewModel @Inject constructor(private val repo: UserRepository
                                 isRequestFailed = FailedRequest(
                                     isFailed = true,
                                     failedMessage = "Server error."
-                                )
+                                ),
+                                notificationMessage = "Server error."
                             )
                         }
                     }
@@ -114,7 +116,8 @@ class SignUpScreenViewModel @Inject constructor(private val repo: UserRepository
                             isRequestFailed = FailedRequest(
                                 isFailed = true,
                                 failedMessage = t.message.toString()
-                            )
+                            ),
+                            notificationMessage = "Server error."
                         )
                     }
                 }

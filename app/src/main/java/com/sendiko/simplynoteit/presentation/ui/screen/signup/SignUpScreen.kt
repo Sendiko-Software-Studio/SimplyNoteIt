@@ -40,16 +40,19 @@ fun SignUpScreen(
     Scaffold { paddingValues ->
         LaunchedEffect(
             key1 = state.isRequestFailed.failedMessage,
+            key2 = state.isSignedUpSuccess,
             block = {
                 if (state.isRequestFailed.failedMessage.isNotBlank()){
                     delay(2000)
                     onEvents(SignUpScreenEvent.SetFailedMessage(!state.isRequestFailed.isFailed))
                 }
+                if (state.isSignedUpSuccess)
+                    onNavigate(Destinations.SignInScreenDestination.destination)
             }
         )
         ContentBoxWithNotification(
-            message = state.isRequestFailed.failedMessage,
-            isErrorNotification = true,
+            message = state.notificationMessage,
+            isErrorNotification = state.isRequestFailed.isFailed,
             isLoading = state.isLoading,
             content = {
                 Column(
