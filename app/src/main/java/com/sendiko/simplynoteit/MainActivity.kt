@@ -11,19 +11,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.sendiko.simplynoteit.presentation.ui.screen.WelcomeScreen
-import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.DashboardScreen
-import com.sendiko.simplynoteit.presentation.ui.screen.dashboard.DashboardScreenViewModel
-import com.sendiko.simplynoteit.presentation.ui.screen.navigation.Destinations
-import com.sendiko.simplynoteit.presentation.ui.screen.profile.ProfileScreen
-import com.sendiko.simplynoteit.presentation.ui.screen.profile.ProfileScreenViewModel
-import com.sendiko.simplynoteit.presentation.ui.screen.signin.SignInScreen
-import com.sendiko.simplynoteit.presentation.ui.screen.signin.SignInScreenViewModel
-import com.sendiko.simplynoteit.presentation.ui.screen.signup.SignUpScreen
-import com.sendiko.simplynoteit.presentation.ui.screen.signup.SignUpScreenViewModel
-import com.sendiko.simplynoteit.presentation.ui.screen.splash.SplashScreen
-import com.sendiko.simplynoteit.presentation.ui.screen.splash.SplashScreenViewModel
-import com.sendiko.simplynoteit.presentation.ui.theme.SimplyNoteItTheme
+import com.sendiko.simplynoteit.welcome.WelcomeScreen
+import com.sendiko.simplynoteit.task.dashboard.presentation.DashboardScreen
+import com.sendiko.simplynoteit.task.dashboard.presentation.DashboardScreenViewModel
+import com.sendiko.simplynoteit.core.navigation.Destinations
+import com.sendiko.simplynoteit.user.profile.presentation.ProfileScreen
+import com.sendiko.simplynoteit.user.profile.presentation.ProfileScreenViewModel
+import com.sendiko.simplynoteit.user.auth.signin.presentation.SignInScreen
+import com.sendiko.simplynoteit.user.auth.signin.presentation.SignInScreenViewModel
+import com.sendiko.simplynoteit.user.auth.signup.presentation.SignUpScreen
+import com.sendiko.simplynoteit.user.auth.signup.presentation.SignUpScreenViewModel
+import com.sendiko.simplynoteit.splash.SplashScreen
+import com.sendiko.simplynoteit.splash.SplashScreenViewModel
+import com.sendiko.simplynoteit.core.ui.theme.SimplyNoteItTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
