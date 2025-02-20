@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.TextFields
-import androidx.compose.material.icons.filled.TextSnippet
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sendiko.simplynoteit.core.ui.components.FilledButton
 import com.sendiko.simplynoteit.core.ui.components.OutlinedTextField
+import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Create
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Delete
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.None
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Read
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Update
-import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,7 +123,7 @@ fun TaskSheet(
                         },
                         label = "Description",
                         hint = "ex: Paid for Rp. 24.000",
-                        leadingIcon = Icons.Default.TextSnippet,
+                        leadingIcon = Icons.Default.TextFields,
                         onClearValue = onTaskDescClear,
                         isPasswordVisible = true
                     )

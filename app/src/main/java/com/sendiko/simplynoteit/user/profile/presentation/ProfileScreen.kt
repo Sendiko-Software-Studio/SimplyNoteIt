@@ -9,13 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.ContactPage
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sendiko.simplynoteit.R
+import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.components.ABOUT_US
 import com.sendiko.simplynoteit.core.ui.components.CONTACT_ME
 import com.sendiko.simplynoteit.core.ui.components.ContentBoxWithNotification
@@ -40,7 +41,6 @@ import com.sendiko.simplynoteit.core.ui.components.InfoCard
 import com.sendiko.simplynoteit.core.ui.components.InfoCardWithIcon
 import com.sendiko.simplynoteit.core.ui.components.PRIVACY_POLICY
 import com.sendiko.simplynoteit.core.ui.components.RedButton
-import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +83,7 @@ fun ProfileScreen(
                             onClick = { onNavigate(Destinations.DashboardScreenDestination.destination) },
                             content = {
                                 Icon(
-                                    imageVector = Icons.Default.KeyboardArrowLeft,
+                                    imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
                                     contentDescription = "navigate back"
                                 )
                             }
@@ -108,9 +108,9 @@ fun ProfileScreen(
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
                             InfoCard(label = "Username: ", text = state.name)
-                            Divider()
+                            HorizontalDivider()
                             InfoCard(label = "Email: ", text = state.email)
-                            Divider()
+                            HorizontalDivider()
                             RedButton(
                                 text = "Logout",
                                 onClick = {
@@ -131,13 +131,13 @@ fun ProfileScreen(
                                 icon = Icons.Default.Info,
                                 extraInfo = ABOUT_US
                             )
-                            Divider()
+                            HorizontalDivider()
                             InfoCardWithIcon(
                                 label = "Privacy and policy",
                                 icon = Icons.Default.PrivacyTip,
                                 extraInfo = PRIVACY_POLICY
                             )
-                            Divider()
+                            HorizontalDivider()
                             InfoCardWithIcon(
                                 label = "Contact us",
                                 icon = Icons.Default.ContactPage,
