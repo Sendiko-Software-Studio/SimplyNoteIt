@@ -1,9 +1,10 @@
 package com.sendiko.simplynoteit.core.di
 
 import android.content.Context
+import com.sendiko.simplynoteit.core.network.ApiService
+import com.sendiko.simplynoteit.core.network.NGROK_SERVER
 import com.sendiko.simplynoteit.core.preference.AppPreferences
 import com.sendiko.simplynoteit.core.preference.dataStore
-import com.sendiko.simplynoteit.core.network.ApiService
 import com.sendiko.simplynoteit.task.dashboard.domain.TaskRepository
 import com.sendiko.simplynoteit.user.core.domain.UserRepository
 import dagger.Module
@@ -41,9 +42,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit{
-        val baseUrl = "https://justdoit-api.sendiko-softwarestudio.web.id/api/"
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl(NGROK_SERVER)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
