@@ -17,16 +17,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sendiko.simplynoteit.R
+import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.components.ContentBoxWithNotification
 import com.sendiko.simplynoteit.core.ui.components.FilledButton
 import com.sendiko.simplynoteit.core.ui.components.OutlinedTextField
-import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
 import kotlinx.coroutines.delay
 
@@ -68,7 +69,7 @@ fun SignInScreen(
                         content = {
                             Image(
                                 painter = painterResource(id = R.drawable.signin),
-                                contentDescription = "sign in",
+                                contentDescription = stringResource(R.string.sign_in),
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
@@ -77,7 +78,7 @@ fun SignInScreen(
                         modifier = Modifier.weight(4f)
                     ) {
                         Text(
-                            text = "Sign In to your account",
+                            text = stringResource(R.string.sign_in_text),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = nunitoFont,
@@ -88,8 +89,8 @@ fun SignInScreen(
                             onNewValue = {
                                 onEvents(SignInScreenEvents.OnEmailChanged(it))
                             },
-                            label = "Email",
-                            hint = "your email",
+                            label = stringResource(R.string.email),
+                            hint = stringResource(R.string.email_hint),
                             leadingIcon = Icons.Default.Email,
                             onClearValue = { onEvents(SignInScreenEvents.OnEmailCleared) },
                             isPasswordTextField = false,
@@ -103,8 +104,8 @@ fun SignInScreen(
                             onNewValue = {
                                 onEvents(SignInScreenEvents.OnPasswordChanged(it))
                             },
-                            label = "Password",
-                            hint = "your password",
+                            label = stringResource(R.string.password),
+                            hint = stringResource(R.string.password_hint),
                             leadingIcon = Icons.Default.Lock,
                             onClearValue = { onEvents(SignInScreenEvents.OnPasswordCleared) },
                             isPasswordTextField = true,
@@ -118,7 +119,9 @@ fun SignInScreen(
                         )
                         FilledButton(
                             modifier = Modifier.fillMaxWidth(),
-                            text = if (state.isLoading) "Loading..." else  "Sign in",
+                            text = if (state.isLoading)
+                                stringResource(R.string.loading)
+                            else  stringResource(R.string.sign_in),
                             onClick = {
                                 onEvents(
                                     SignInScreenEvents.OnSignIn(
@@ -133,7 +136,7 @@ fun SignInScreen(
                             onClick = { onNavigate(Destinations.SignUpScreenDestination.destination) },
                             content = {
                                 Text(
-                                    text = "Belum punya akun? daftar sini!",
+                                    text = stringResource(R.string.sign_up_hint),
                                     modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Center,
                                     fontFamily = nunitoFont

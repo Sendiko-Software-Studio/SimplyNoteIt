@@ -38,11 +38,6 @@ fun SplashScreen(
         contentAlignment = Alignment.Center,
         content = {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
-                contentDescription = null,
-                modifier = Modifier.size(64.dp)
-            )
-            Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = null,
                 modifier = Modifier.size(64.dp)

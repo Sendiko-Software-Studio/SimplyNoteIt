@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">SimplyNoteIt</string>
+    <string name="greeting">Greetings, %1$s!</string>
+    <string name="completed_task">See completed task</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in_text">Sign In to your account</string>
+    <string name="email">Email</string>
+    <string name="email_hint">Your email</string>
+    <string name="password">Password</string>
+    <string name="password_hint">Your password</string>
+    <string name="loading">Loading...</string>
+    <string name="sign_up_hint">Don\'t have an account? Register here!</string>
+    <string name="sign_up_headline">Sign Up a new account</string>
+    <string name="username">Username</string>
+    <string name="username_hint">Your username</string>
+    <string name="sign_in_hint">Already have an account? Login here!</string>
+    <string name="profile">Your Profile</string>
+    <string name="username_label">Username: </string>
+    <string name="email_label">Email: </string>
+    <string name="logout">Logout</string>
+    <string name="about_us">About Us</string>
+    <string name="about_us_content">Sendiko Software Studio is a small company found by Sendiko, with the intention to make high quality softwares accessible to anyone.</string>
+    <string name="privacy_policy">Privacy and policy</string>
+    <string name="privacy_policy_content">"Data Collection" +
+            "\nSimplyNoteIt collect only email from the users, and we ensure the security of the data that we collect. We do not track user behavior, nor do we use cookies or any other tracking technology. The only data that we collect is user email for user's account. This data is stored remotely on secure server." +
+            "\n" +
+            "\nData Protection" +
+            "\nWe take the privacy and security of our users very seriously, and we use industry-standard measures to protect the data that is stored on our server."</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="contact_us_content">If you had any question or issues you can always reach me at rizkysendiko7@gmail.com or file an issue here: https://github.com/Sendiko/SimplyNoteIt/issues, i\'ll help you with your issues and/or questions!</string>
+    <string name="powered_by">powered by: </string>
+    <string name="welcome_1">Manage todolist better!</string>
+    <string name="welcome_2">No more messy works everywhere</string>
+    <string name="lets_go">Let\'s go!</string>
 </resources>

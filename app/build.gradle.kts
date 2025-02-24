@@ -82,6 +82,7 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

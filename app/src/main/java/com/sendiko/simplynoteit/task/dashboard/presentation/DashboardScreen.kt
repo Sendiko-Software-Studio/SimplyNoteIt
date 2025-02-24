@@ -2,8 +2,6 @@ package com.sendiko.simplynoteit.task.dashboard.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -39,23 +37,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sendiko.simplynoteit.R
-import com.sendiko.simplynoteit.task.dashboard.data.TaskItem
-import com.sendiko.simplynoteit.task.core.presentation.CompletedTaskItem
+import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.components.ContentBoxWithNotification
+import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
+import com.sendiko.simplynoteit.task.core.presentation.CompletedTaskItem
 import com.sendiko.simplynoteit.task.core.presentation.LoadingTaskItem
-import com.sendiko.simplynoteit.task.core.presentation.TaskItem
-import com.sendiko.simplynoteit.task.core.presentation.TaskSheet
 import com.sendiko.simplynoteit.task.core.presentation.SortBy
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Create
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Delete
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.None
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Read
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Update
-import com.sendiko.simplynoteit.core.navigation.Destinations
-import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
+import com.sendiko.simplynoteit.task.core.presentation.TaskItem
+import com.sendiko.simplynoteit.task.core.presentation.TaskSheet
+import com.sendiko.simplynoteit.task.dashboard.data.TaskItem
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +96,7 @@ fun DashboardScreen(
                     scrollBehavior = scrollBehavior,
                     title = {
                         Text(
-                            text = "Hellow, ${state.name}",
+                            text = stringResource(R.string.greeting, state.name),
                             fontFamily = nunitoFont,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -209,8 +209,8 @@ fun DashboardScreen(
                     item {
                         AnimatedVisibility(
                             visible = state.tasks == emptyList<TaskItem>() && !state.isLoading,
-                            enter = fadeIn(),
-                            exit = fadeOut()
+                            enter = expandVertically(),
+                            exit = shrinkVertically()
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.add_tasks),
@@ -261,13 +261,13 @@ fun DashboardScreen(
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Text(
-                                        text = "See completed task",
+                                        text = stringResource(R.string.completed_task),
                                         fontFamily = nunitoFont
                                     )
                                     Icon(
                                         imageVector = if (state.isCheckedTaskVisible)
                                             Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                                        contentDescription = "See completed task"
+                                        contentDescription = stringResource(R.string.completed_task)
                                     )
                                 }
                             }
@@ -296,4 +296,14 @@ fun DashboardScreen(
 
         }
     }
+}
+
+@Preview
+@Composable
+private fun DashboardScreenPrev() {
+    DashboardScreen(
+        state = DashboardScreenState(name = "Sendiko"),
+        onEvent = { },
+        onNavigate = {  }
+    )
 }

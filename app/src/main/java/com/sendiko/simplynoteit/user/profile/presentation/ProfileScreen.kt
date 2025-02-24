@@ -28,18 +28,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sendiko.simplynoteit.R
 import com.sendiko.simplynoteit.core.navigation.Destinations
-import com.sendiko.simplynoteit.core.ui.components.ABOUT_US
-import com.sendiko.simplynoteit.core.ui.components.CONTACT_ME
 import com.sendiko.simplynoteit.core.ui.components.ContentBoxWithNotification
 import com.sendiko.simplynoteit.core.ui.components.InfoCard
 import com.sendiko.simplynoteit.core.ui.components.InfoCardWithIcon
-import com.sendiko.simplynoteit.core.ui.components.PRIVACY_POLICY
 import com.sendiko.simplynoteit.core.ui.components.RedButton
 import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
 
@@ -73,7 +71,7 @@ fun ProfileScreen(
                 LargeTopAppBar(
                     title = {
                         Text(
-                            text = "Your Profile",
+                            text = stringResource(R.string.profile),
                             fontFamily = nunitoFont,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -84,7 +82,7 @@ fun ProfileScreen(
                             content = {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
-                                    contentDescription = "navigate back"
+                                    contentDescription = null
                                 )
                             }
                         )
@@ -107,12 +105,12 @@ fun ProfileScreen(
                         Card(
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
-                            InfoCard(label = "Username: ", text = state.name)
+                            InfoCard(label = stringResource(R.string.username_label), text = state.name)
                             HorizontalDivider()
-                            InfoCard(label = "Email: ", text = state.email)
+                            InfoCard(label = stringResource(R.string.email_label), text = state.email)
                             HorizontalDivider()
                             RedButton(
-                                text = "Logout",
+                                text = stringResource(R.string.logout),
                                 onClick = {
                                     onEvent(ProfileScreenEvent.OnLogoutClick)
                                 },
@@ -127,28 +125,28 @@ fun ProfileScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         Card {
                             InfoCardWithIcon(
-                                label = "About us",
+                                label = stringResource(R.string.about_us),
                                 icon = Icons.Default.Info,
-                                extraInfo = ABOUT_US
+                                extraInfo = stringResource(R.string.about_us_content)
                             )
                             HorizontalDivider()
                             InfoCardWithIcon(
-                                label = "Privacy and policy",
+                                label = stringResource(R.string.privacy_policy),
                                 icon = Icons.Default.PrivacyTip,
-                                extraInfo = PRIVACY_POLICY
+                                extraInfo = stringResource(R.string.privacy_policy_content)
                             )
                             HorizontalDivider()
                             InfoCardWithIcon(
-                                label = "Contact us",
+                                label = stringResource(R.string.contact_us),
                                 icon = Icons.Default.ContactPage,
-                                extraInfo = CONTACT_ME
+                                extraInfo = stringResource(R.string.contact_us_content)
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                     item {
                         Text(
-                            text = "powered by:",
+                            text = stringResource(R.string.powered_by),
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             fontFamily = nunitoFont
@@ -157,7 +155,8 @@ fun ProfileScreen(
                             Spacer(modifier = Modifier.weight(1f))
                             Image(
                                 painter = painterResource(id = R.drawable.logo_long),
-                                contentDescription = "logo",
+                                contentDescription = null
+                                ,
                                 modifier = Modifier.weight(3f)
                             )
                             Spacer(modifier = Modifier.weight(1f))

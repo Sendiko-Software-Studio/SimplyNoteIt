@@ -18,16 +18,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sendiko.simplynoteit.R
+import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.components.ContentBoxWithNotification
 import com.sendiko.simplynoteit.core.ui.components.FilledButton
 import com.sendiko.simplynoteit.core.ui.components.OutlinedTextField
-import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
 import kotlinx.coroutines.delay
 
@@ -68,7 +69,7 @@ fun SignUpScreen(
                         content = {
                             Image(
                                 painter = painterResource(id = R.drawable.signin),
-                                contentDescription = "sign in",
+                                contentDescription = stringResource(R.string.sign_in),
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
@@ -77,7 +78,7 @@ fun SignUpScreen(
                         modifier = Modifier.weight(7f)
                     ) {
                         Text(
-                            text = "Sign Up a new account",
+                            text = stringResource(R.string.sign_up_headline),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = nunitoFont,
@@ -88,8 +89,8 @@ fun SignUpScreen(
                             onNewValue = {
                                 onEvents(SignUpScreenEvent.OnUsernameChanged(it))
                             },
-                            label = "Username",
-                            hint = "your username",
+                            label = stringResource(R.string.username),
+                            hint = stringResource(R.string.username_hint),
                             leadingIcon = Icons.Default.Person,
                             onClearValue = { onEvents(SignUpScreenEvent.OnUsernameCleared) },
                             isPasswordTextField = false,
@@ -103,8 +104,8 @@ fun SignUpScreen(
                             onNewValue = {
                                 onEvents(SignUpScreenEvent.OnEmailChanged(it))
                             },
-                            label = "Email",
-                            hint = "your email",
+                            label = stringResource(R.string.email),
+                            hint = stringResource(R.string.email_hint),
                             leadingIcon = Icons.Default.Email,
                             onClearValue = { onEvents(SignUpScreenEvent.OnEmailCleared) },
                             isPasswordTextField = false,
@@ -118,8 +119,8 @@ fun SignUpScreen(
                             onNewValue = {
                                 onEvents(SignUpScreenEvent.OnPasswordChanged(it))
                             },
-                            label = "Password",
-                            hint = "your password",
+                            label = stringResource(R.string.password),
+                            hint = stringResource(R.string.password_hint),
                             leadingIcon = Icons.Default.Lock,
                             onClearValue = { onEvents(SignUpScreenEvent.OnPasswordCleared) },
                             isPasswordTextField = true,
@@ -133,7 +134,9 @@ fun SignUpScreen(
                         )
                         FilledButton(
                             modifier = Modifier.fillMaxWidth(),
-                            text = if (state.isLoading) "Loading..." else "Sign up",
+                            text = if (state.isLoading)
+                                stringResource(R.string.loading)
+                            else stringResource(R.string.sign_up),
                             enabled = !state.isLoading,
                             onClick = { onEvents(
                                 SignUpScreenEvent.OnSignUp(
@@ -145,7 +148,7 @@ fun SignUpScreen(
                             onClick = { onNavigate(Destinations.SignInScreenDestination.destination) },
                             content = {
                                 Text(
-                                    text = "Udah punya akun? sign in sini!",
+                                    text = stringResource(R.string.sign_in_hint),
                                     modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Center,
                                     fontFamily = nunitoFont

@@ -13,14 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sendiko.simplynoteit.R
+import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.components.ButtonSize
 import com.sendiko.simplynoteit.core.ui.components.FilledButton
-import com.sendiko.simplynoteit.core.navigation.Destinations
 import com.sendiko.simplynoteit.core.ui.theme.nunitoFont
 
 @Composable
@@ -41,7 +42,7 @@ fun WelcomeScreen(
                 content = {
                     Image(
                         painter = painterResource(id = R.drawable.add_tasks),
-                        contentDescription = "add tasks"
+                        contentDescription = null
                     )
                 }
             )
@@ -50,7 +51,7 @@ fun WelcomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Manage todolist better!",
+                    text = stringResource(R.string.welcome_1),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = nunitoFont,
@@ -58,7 +59,7 @@ fun WelcomeScreen(
                     textAlign = TextAlign.Start
                 )
                 Text(
-                    text = "No more messy works everywhere",
+                    text = stringResource(R.string.welcome_2),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = nunitoFont,
@@ -67,7 +68,7 @@ fun WelcomeScreen(
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 FilledButton(
-                    text = "Let's go!",
+                    text = stringResource(R.string.lets_go),
                     onClick = { onNavigate(Destinations.SignInScreenDestination.destination) },
                     buttonSize = ButtonSize.Big,
                 )
