@@ -3,20 +3,22 @@ package com.sendiko.simplynoteit.task.dashboard.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.BottomAppBar
@@ -36,7 +38,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,8 +76,9 @@ fun DashboardScreen(
     LaunchedEffect(
         key1 = state.tasks,
         key2 = state.notificationMessage,
+        key3 = state.token,
         block = {
-            if (state.tasks == emptyList<TaskItem>())
+            if (state.tasks == emptyList<TaskItem>() && state.token.isNotBlank())
                 onEvent(DashboardScreenEvents.OnTaskLoad)
 
             if (state.notificationMessage.isNotBlank())
@@ -212,11 +214,16 @@ fun DashboardScreen(
                             enter = expandVertically(),
                             exit = shrinkVertically()
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.add_tasks),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize()
-                            )
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(256.dp),
+                                    imageVector = Icons.Filled.Checklist,
+                                    contentDescription = null
+                                )
+                            }
                         }
                     }
                     items(5) {
