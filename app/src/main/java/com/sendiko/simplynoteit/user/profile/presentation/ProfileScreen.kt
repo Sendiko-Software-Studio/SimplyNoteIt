@@ -53,11 +53,12 @@ fun ProfileScreen(
     LaunchedEffect(
         key1 = state.isSignedOutSuccessfully,
         key2 = state.name,
+        key3 = state.token,
         block = {
             if (state.isSignedOutSuccessfully)
                 onNavigate(Destinations.SignInScreenDestination.destination)
 
-            if (state.name.isBlank())
+            if (state.name.isBlank() && state.token.isNotBlank())
                 onEvent(ProfileScreenEvent.OnGetUserInfo)
         }
     )

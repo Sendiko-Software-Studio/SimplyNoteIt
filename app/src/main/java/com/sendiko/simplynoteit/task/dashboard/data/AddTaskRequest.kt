@@ -9,7 +9,14 @@ data class AddTaskRequest(
 
 	@field:SerializedName("user_id")
 	val userId: String,
+
+	@field:SerializedName("description")
 	val description: String,
-	val title: String
+
+	@field:SerializedName("title")
+	val title: String,
+
+	@field:SerializedName("category")
+	val category: String
 )
 

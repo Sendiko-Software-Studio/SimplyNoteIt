@@ -2,19 +2,19 @@ package com.sendiko.simplynoteit.task.dashboard.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sendiko.simplynoteit.task.dashboard.data.AddTaskRequest
-import com.sendiko.simplynoteit.task.dashboard.data.UpdateTaskRequest
-import com.sendiko.simplynoteit.task.dashboard.data.AddTaskResponse
-import com.sendiko.simplynoteit.task.dashboard.data.DeleteTaskResponse
-import com.sendiko.simplynoteit.task.dashboard.data.GetTasksResponse
-import com.sendiko.simplynoteit.task.dashboard.data.TaskItem
-import com.sendiko.simplynoteit.task.dashboard.data.UpdateTaskResponse
-import com.sendiko.simplynoteit.task.dashboard.domain.TaskRepository
-import com.sendiko.simplynoteit.user.core.domain.UserRepository
 import com.sendiko.simplynoteit.core.ui.helper.FailedRequest
 import com.sendiko.simplynoteit.task.core.presentation.SortBy.*
 import com.sendiko.simplynoteit.task.core.presentation.TaskAction.Update
 import com.sendiko.simplynoteit.task.core.presentation.TaskSheetState
+import com.sendiko.simplynoteit.task.dashboard.data.AddTaskRequest
+import com.sendiko.simplynoteit.task.dashboard.data.AddTaskResponse
+import com.sendiko.simplynoteit.task.dashboard.data.DeleteTaskResponse
+import com.sendiko.simplynoteit.task.dashboard.data.GetTasksResponse
+import com.sendiko.simplynoteit.task.dashboard.data.TaskItem
+import com.sendiko.simplynoteit.task.dashboard.data.UpdateTaskRequest
+import com.sendiko.simplynoteit.task.dashboard.data.UpdateTaskResponse
+import com.sendiko.simplynoteit.task.dashboard.domain.TaskRepository
+import com.sendiko.simplynoteit.user.core.domain.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -114,7 +114,8 @@ class DashboardScreenViewModel @Inject constructor(
             request = UpdateTaskRequest(
                 title = task.title,
                 description = task.description,
-                isDone = task.isDone
+                isDone = task.isDone,
+                category = "test"
             )
         )
         request.enqueue(
@@ -193,7 +194,8 @@ class DashboardScreenViewModel @Inject constructor(
                 isDone = 0,
                 title = state.value.taskSheetState.taskText,
                 description = state.value.taskSheetState.descriptionText,
-                userId = state.value.userId
+                userId = state.value.userId,
+                category = "test"
             )
         )
         request.enqueue(

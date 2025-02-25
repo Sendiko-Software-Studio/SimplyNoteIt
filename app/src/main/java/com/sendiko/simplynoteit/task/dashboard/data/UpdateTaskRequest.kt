@@ -11,5 +11,8 @@ data class UpdateTaskRequest(
 	val description: String,
 
 	@field:SerializedName("title")
-	val title: String
+	val title: String,
+
+	@field:SerializedName("category")
+	val category: String
 )
